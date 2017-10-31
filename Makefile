@@ -4,13 +4,13 @@ CFLAGS=-Wall -W -g -Werror
 
 
 
-all: client server
+all: client #server
 
-client: client.c raw.c
-	$(CC) client.c raw.c $(CFLAGS) -o client
+client: client.cpp raw.c
+	$(CC) client.cpp raw.c $(CFLAGS) -o client
 
-server: server.c 
-	$(CC) server.c $(CFLAGS) -o server
+server: server 
+# 	$(CC) server.c $(CFLAGS) -o server
 
 clean:
 	rm -f client server *.o
