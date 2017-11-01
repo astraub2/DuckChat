@@ -473,4 +473,3 @@ struct sockaddr_in get_addr_struct() {
 	struct sockaddr_in *address = (struct sockaddr_in *)&server;
 	return *address;
 }
->>>>>>> b8a8405d56cd3e8b481adabadc14d13f9b96a7ec

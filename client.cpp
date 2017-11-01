@@ -178,7 +178,7 @@ void list_request(int sock, struct addrinfo *p) {
 	struct request_list list;
 	
 	memset(&list, '\0', sizeof(list));
-	list.req_type = htonl(REQ_LIST);
+	list.req_type = REQ_LIST;
 	
 	if (sendto(sock, &list, sizeof(struct request_list), 0, p->ai_addr, p->ai_addrlen) < 0) {
 		fprintf(stderr, "Unable to set request for list.\n");
@@ -191,6 +191,9 @@ void who_request(int sock, struct addrinfo *p, const char *chann) {
 	memset(&who, '\0', sizeof(who));
 	who.req_type = REQ_WHO;
 	strncpy(who.req_channel, chann, CHANNEL_MAX);
+	//char channel[CHANNEL_MAX];
+    //strncpy(channel, text+5, strlen(text)-1);
+	//strcpy(who.req_channel, channel); 
 
 	if (sendto(sock, &who, sizeof(struct request_who), 0, p->ai_addr, p->ai_addrlen) < 0) {
 		fprintf(stderr, "Unable to send who request.\n");
@@ -263,10 +266,9 @@ bool handle_server(int sock, struct addrinfo *p) {
 			printf("[%s][%s]:%s\n> ", serverSay->txt_channel, serverSay->txt_username, serverSay->txt_text);	
 
 		} else if (message->txt_type == TXT_LIST) {
-			int no_channels;
 			struct channel_info* channel;
 			serverList = (text_list *) message;
-			no_channels = serverList->txt_nchannels;
+			int no_channels = serverList->txt_nchannels;
 			channel = serverList->txt_channels;
 
 			printf("Existing channels: \n");
@@ -275,14 +277,13 @@ bool handle_server(int sock, struct addrinfo *p) {
 			} 
 
 		} else if (message->txt_type == TXT_WHO) {
-			int no_users;
-			struct user_info* user;
 			serverWho = (text_who *) message;
-			printf("Existing channels:\n");
-			printf("Users are on channel %s\n", serverWho->txt_channel);
 			
+			int no_users = serverWho->txt_nusernames;
+
+			printf("Users are on channel %s\n", serverWho->txt_channel);
 			for (int i = 0; i < no_users; i++) {
-				printf(" %s\n", (user+i)->us_username);
+				printf(" %s\n", (char*)serverWho->txt_users+(32*i));
 			}
 			
 			printf("> ");
