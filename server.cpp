@@ -19,18 +19,17 @@
 #define BUFFER 1024
 using namespace std;
 
-//globals
-int 			sockfd;
+
+int sockfd;
 struct sockaddr server;
 struct addrinfo *rp;
 
-map<string,vector<string> > 							userTalk;
-multimap<string,struct sockaddr_in> 					user2addr;
-map<string,vector<pair<string,struct sockaddr_in> > >   channelTalk;
+map<string,vector<string> > userTalk;
+multimap<string,struct sockaddr_in> user2addr;
+map<string,vector<pair<string,struct sockaddr_in> > >  channelTalk;
 vector<string> channels;
 
 
-//methods
 int socket_connect(char *ip, char *port);
 int login_request(struct request_login *log);
 int logout_request();
@@ -47,7 +46,6 @@ string get_current_user();
 struct sockaddr_in address_struct();
 
 
-//program
 int main(int argc, char **argv) {
 	char *ip, *port;
 	socklen_t from;
@@ -216,7 +214,6 @@ int join_request(struct request_join *join) {
 int leave_request(struct request_leave *leave) {
     string username, channel; 
     struct sockaddr_in address;
-    //struct sockaddr_in addr;
     multimap<string, struct sockaddr_in>::iterator userIter;
     map<string,vector<pair<string,struct sockaddr_in> > >::iterator vectIter;
     vector<pair<string,struct sockaddr_in> > vect;
@@ -224,7 +221,6 @@ int leave_request(struct request_leave *leave) {
     cout << username << ": recv Request Leave" << endl;    
     
     username = get_current_user();
-    //addr   = address_struct();
     channel  = (string)(leave->req_channel);
     userIter = user2addr.find(username);
     address  = userIter->second;
@@ -327,7 +323,6 @@ int who_request(struct request_who *who) {
 
 int say_request(struct request_say *say) {
     string channel, message, username;
-    //struct sockaddr_in fromAddr = address_struct();
     map<string,vector<pair<string,struct sockaddr_in> > >::iterator iter; 
     vector<pair<string,struct sockaddr_in> > temp;
     
@@ -504,4 +499,3 @@ struct sockaddr_in address_struct() {
     address = (struct sockaddr_in*)&server;
     return *address;
 }
-
